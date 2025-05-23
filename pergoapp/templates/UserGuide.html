@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+
+    <h1 class="Titulos-Pesta">Guía de Uso</h1>
+    <div class="container guia-uso-container">
+
+        <p class="guia-uso-parrafo">
+            Antes de utilizar el generador, es necesario crear una cuenta de usuario desde esta misma página. Para ello,
+            deberás ingresar un nombre de usuario, una contraseña (y confirmarla), así como completar algunos datos
+            adicionales como el nombre y las siglas de la radio, un correo electrónico de contacto y el estado o región
+            en el que operas.
+        </p>
+
+        <p class="guia-uso-parrafo">
+            Una vez creada la cuenta, deberás iniciar una suscripción y realizar el pago a través de PayPal. Con el
+            mismo usuario y contraseña que registres aquí, podrás acceder a todas las funciones del programa.
+        </p>
+
+        <p class="guia-uso-parrafo">
+            El nombre de la radio servirá para identificarla fácilmente, mientras que las siglas se utilizarán para
+            nombrar los audios generados. El correo electrónico nos permitirá mantenerte informado sobre actualizaciones
+            importantes, y el estado o región se solicita con fines estadísticos, para conocer en qué zonas se utiliza
+            el programa.
+        </p>
+
+
+    </div>
+
+    <h1 class="Titulos-Pesta">Configuración Inicial</h1>
+
+    <div class="container guia-uso-container my-4">
+        <h4 class="text-center mb-4">Antes de comenzar</h4>
+        <p class="guia-uso-parrafo text-center">
+            Antes de usar el programa, es necesario realizar la configuración inicial. En el siguiente video se muestra
+            paso a paso cómo hacerlo.
+        </p>
+        <p class="guia-uso-parrafo text-center">
+            Recuerda que necesitas contar con un usuario y contraseña que obtuviste al registrarte en la página.
+        </p>
+        <p class="guia-uso-parrafo text-center">
+            El programa requiere conexión a internet para funcionar correctamente.
+        </p>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-8">
+                <video controls class="img-fluid rounded" preload="metadata" style="width: 100%;">
+                    <source src="https://storage.googleapis.com/datos_web_audio_testigos/videos/Configuracion%20Inicial.mp4"
+                            type="video/mp4">
+                    Tu navegador no admite la reproducción de video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="Titulos-Pesta">Agregar y configurar campañas</h1>
+
+    <div class="container guia-uso-container my-4">
+        <p class="guia-uso-parrafo text-center">
+            Una vez finalizada la configuración inicial, pasamos a la configuración de campañas.
+            En el siguiente video te mostraremos paso a paso cómo utilizar el programa.
+        </p>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-8">
+                <video controls class="img-fluid rounded" preload="metadata" style="width: 100%;">
+                    <source src="https://storage.googleapis.com/datos_web_audio_testigos/videos/Agregar%20Campa%C3%B1a.mp4"
+                            type="video/mp4">
+                    Tu navegador no admite la reproducción de video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

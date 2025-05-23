@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if messages %}
+  {% for msg in messages %}
+    <div class="alert alert-danger">{{ msg }}</div>
+  {% endfor %}
+{% endif %}
+<main class="container">
+    <div class="row">
+        <div class="signupFrm">
+            <form method="POST" class="form">
+                <h1 class="title" style="white-space: nowrap;">Crear cuenta</h1>
+
+                <p>
+                    {{ error }}
+                </p>
+
+                {% csrf_token %}
+
+                <!-- USERNAME -->
+                <div class="inputContainer">
+                    <input type="text" class="input" name="username" id="username" placeholder="a">
+                    <label for="username" class="label">Nombre de usuario</label>
+                </div>
+
+                <!-- PASSWORD 1 -->
+                <div class="inputContainer">
+                    <input type="password" class="input" name="password1" id="password1" placeholder="a">
+                    <label for="password1" class="label">Contraseña</label>
+                </div>
+
+                <!-- PASSWORD 2 -->
+                <div class="inputContainer">
+                    <input type="password" class="input" name="password2" id="password2" placeholder="a">
+                    <label for="password2" class="label">Repetir contraseña</label>
+                </div>
+
+                <!-- NOMBRE DE LA RADIO -->
+                <div class="inputContainer">
+                    <input type="text" class="input" name="nombre_radio" id="nombre_radio" placeholder="a">
+                    <label for="nombre_radio" class="label">Nombre de la Radio</label>
+                </div>
+
+                <!-- SIGLAS -->
+                <div class="inputContainer">
+                    <input type="text" class="input" name="siglas" id="siglas" placeholder="a">
+                    <label for="siglas" class="label">Siglas</label>
+                </div>
+
+                <!-- CORREO ELECTRÓNICO -->
+                <div class="inputContainer">
+                    <input type="email" class="input" name="correo_electronico" id="correo_electronico" placeholder="a">
+                    <label for="correo_electronico" class="label">Correo electrónico</label>
+                </div>
+
+               <div class="inputContainer2">
+                <div class="form-group d-flex align-items-center">
+                    <!-- Label para el campo 'estado' -->
+                    <label for="estado" class="label_selector me-3">Estado</label>
+                    <!-- 'me-3' agrega margen a la derecha -->
+                    <!-- Campo 'estado' como lista desplegable -->
+                    {{ form.estado }}
+                </div>
+            </div>
+
+                <input type="submit" class="submitBtn" value="Sign up">
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
+

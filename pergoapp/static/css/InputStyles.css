@@ -1,0 +1,147 @@
+/* Puts the form in the center both horizontally and vertically. Sets its height to 100% of the viewport's height */
+
+.signupFrm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.form {
+  background-color: rgba(255, 255, 255, 0.5);;
+  width: 400px;
+  border-radius: 8px;
+  padding: 20px 40px;
+  box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+}
+
+.title {
+  font-size: 50px;
+  margin-bottom: 50px;
+}
+
+.inputContainer {
+  position: relative;
+  height: 45px;
+  width: 90%;
+  margin-bottom: 17px;
+}
+
+/* Style the inputs */
+
+.input {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #DADCE0;
+  border-radius: 7px;
+  font-size: 16px;
+  padding: 0 20px;
+  outline: none;
+  background: none;
+  z-index: 1;
+}
+
+/* Hide the placeholder texts (a) */
+
+::placeholder {
+  color: transparent;
+}
+
+/* Styling text labels */
+
+.label {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 0 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #596194;
+  font-size: 16px;
+  transition: 0.5s;
+  z-index: 0;
+}
+
+
+.submitBtn {
+  display: block;
+  margin-left: auto;
+  padding: 15px 30px;
+  border: none;
+  background-color: #596194;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 30px;
+}
+
+.submitBtn:hover {
+  background-color: #7178ad;
+  transform: translateY(-2px);
+}
+
+.input:focus + .label {
+  top: -7px;
+  left: 3px;
+  z-index: 10;
+  font-size: 14px;
+  font-weight: 600;
+  color: #596194;
+}
+
+.input:focus {
+  border: 2px solid #596194;
+}
+
+.input:not(:placeholder-shown)+ .label {
+  top: -7px;
+  left: 3px;
+  z-index: 10;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Estilo general para el contenedor inputContainer */
+.inputContainer2 {
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 10px; /* Espaciado dentro del contenedor */
+  background-color: white; /* Fondo blanco para el contenedor */
+  margin: 10px; /* Márgenes superior e inferior de 20px y centrado horizontal */
+  margin-left: 0px; /* Asegura que el contenedor esté pegado a la izquierda */
+  width: 90%; /* Ocupa el 80% del ancho de la pantalla */
+  max-width: 600px; /* Máximo ancho de 600px */
+  border: 1px solid #DADCE0;
+}
+
+
+/* Estilo para las etiquetas */
+.label_selector {
+  font-size: 16 px; /* Tamaño de la fuente */
+  color: #495057; /* Color del texto */
+  margin-bottom: 6px; /* Espaciado debajo del label */
+  display: block; /* El label ocupa toda la línea */
+}
+
+/* Estilo para los campos de entrada (select) */
+select.form-control {
+  border-radius: 10px; /* Bordes redondeados */
+  border: 2px solid #ccc; /* Borde gris claro */
+  padding: 12px; /* Espaciado dentro del campo */
+  font-size: 1rem; /* Tamaño de la fuente */
+  width: 100%; /* Hace que ocupe todo el ancho disponible */
+  background-color: #fafafa; /* Fondo gris claro */
+}
+
+/* Estilo cuando el select está enfocado */
+select.form-control:focus {
+  border-color: #3498db; /* Borde azul cuando se enfoca el campo */
+  background-color: #fff; /* Fondo blanco cuando se enfoca */
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.6); /* Sombra azul suave */
+}
+
+
+
+

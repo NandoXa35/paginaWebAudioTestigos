@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="containder">
+    <div class="row">
+        <div class="signupFrm">
+            <form action="/signin/" method="POST" class="form">
+
+                <h1 class="title">Ingresar</h1>
+                <p>
+                    {{error}}
+                </p>
+                {% csrf_token %}
+
+                <div class="inputContainer">
+                    <input type="text" class="input" name="username" id="username" placeholder="a">
+                    <label for="Username" class="label">Nombre de usuario</label>
+                </div>
+
+                <div class="inputContainer">
+                    <input type="password" class="input" name="password" id="password" placeholder="a">
+                    <label for="password" class="label">Contraseña</label>
+                </div>
+
+                <input type="submit" class="submitBtn" value="Sign up">
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %} {% block content %}
+
+<main class="containder">
+    <div class="row">
+        <div class="signupFrm">
+            <form method="POST" class="form">
+
+                <h1 class="title">Datos adicionales</h1>
+                <p>
+                    {{error}}
+                </p>
+                {% csrf_token %}
+
+                <div class="inputContainer">
+                    <input type="text" class="input" name="nombre_radio" id="nombre_radio" placeholder="a">
+                    <label for="nombre_radio" class="label">Nombre de la radio</label>
+                </div>
+
+                <div class="inputContainer">
+                    <input type="text" class="input" name="siglas" id="siglas" placeholder="a">
+                    <label for="siglas" class="label">Siglas de la radio</label>
+                </div>
+
+                <div class="inputContainer">
+                    <input type="text" class="input" name="correo_electronico" id="correo_electronico" placeholder="a">
+                    <label for="correo_electronico" class="label">Correo</label>
+                </div>
+
+                <div class="inputContainer2">
+                    <div class="form-group d-flex align-items-center">
+                        <!-- Label para el campo 'Software' -->
+                        <label for="Software" class="label_selector me-4">Software</label>
+                        <!-- 'me-3' agrega margen a la derecha -->
+                        <!-- Campo 'Software' como lista desplegable -->
+                        {{ form.Software }}
+                    </div>
+                </div>
+
+                <div class="inputContainer2">
+                    <div class="form-group d-flex align-items-center">
+                        <!-- Label para el campo 'estado' -->
+                        <label for="estado" class="label_selector me-3">Estado</label>
+                        <!-- 'me-3' agrega margen a la derecha -->
+                        <!-- Campo 'estado' como lista desplegable -->
+                        {{ form.estado }}
+                    </div>
+                </div>
+
+
+                <input type="submit" class="submitBtn" value="Guardar">
+            </form>
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}
+
+

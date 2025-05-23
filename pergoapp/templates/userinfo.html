@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- ── Datos del usuario ────────────────────────────────────────── -->
+    <h1 class="Titulos-Pesta mb-3">Información del Usuario</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+
+            {% if radio %}
+            <p><strong>Correo electrónico:</strong> {{ radio.correo_electronico }}</p>
+            <p><strong>Nombre de la Radio:</strong> {{ radio.nombre_radio }}</p>
+            <p><strong>Siglas de la Radio:</strong> {{ radio.siglas }}</p>
+            <p><strong>Estado:</strong> {{ radio.estado }}</p>
+            {% else %}
+            <p class="text-muted">No se encontró información de la radio asociada.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ── Estado de suscripción ────────────────────────────────────── -->
+    <h2 class="Titulos-Pesta mb-3">Estado de Suscripción</h2>
+
+    {% if radio and radio.estado_suscripcion == "Activo" %}
+    <div class="alert alert-success">
+        Tu suscripción está <strong>ACTIVA</strong> desde
+        {{ radio.fecha_inicio|date:"d/m/Y" }}.<br>
+        Días restantes: <strong>{{ radio.dias_restantes }}</strong>
+    </div>
+
+    {% else %}
+    <div class="alert alert-secondary">
+        No tienes una suscripción activa.
+    </div>
+
+    <!-- Botón para crear suscripción -->
+    <form action="{% url 'create_subscription' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">
+            Suscribirme por $899 MXN/mes
+        </button>
+    </form>
+
+
+    {% endif %}
+    <div style="height: 20px;"></div>
+
+</div>
+{% endblock %}

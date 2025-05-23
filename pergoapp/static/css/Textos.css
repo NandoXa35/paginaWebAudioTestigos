@@ -1,0 +1,117 @@
+/*/////////  Estilos para los contenedores de texto /////////*/
+
+/* Contenedor principal de la sección de la guía */
+.guia-uso-container {
+  max-width: 1500px;   /* Ancho máximo del contenido */
+  margin: 0 auto;     /* Centrar horizontalmente */
+  padding: 20px;      /* Espaciado interno */
+  background-color: rgba(255,255,255,0.25); /* Color de fondo sutil */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Sombra sutil */
+  margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.home-container {
+  color: rgba(255,255,255,0.25); /* Color de fondo sutil */
+  height:375px;
+  width:650px;
+  margin: 0 auto;     /* Centrar horizontalmente */
+  padding: 20px;      /* Espaciado interno */
+  background-color: rgba(255,255,255,0.25); /* Color de fondo sutil */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Sombra sutil */
+  margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.download-container {
+  color: rgba(255,255,255,0.25); /* Color de fondo sutil */
+  width:650px;
+  margin: 0 auto;     /* Centrar horizontalmente */
+  padding: 20px;      /* Espaciado interno */
+  background-color: rgba(255,255,255,0.25); /* Color de fondo sutil */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Sombra sutil */
+  margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+/* Título principal */
+.Titulos-Pesta {
+  font-family:  "Roboto Condensed", sans-serif;
+  max-width: 750px;   /* Ancho máximo del contenido */
+  margin: 0 auto;     /* Centrar horizontalmente */
+  padding: 15px;      /* Espaciado interno */
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #3c0036;
+  margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+/* Estilo de los párrafos */
+.guia-uso-parrafo {
+  background-color: rgba(255,255,255,0.25); /* Color de fondo sutil */
+  font-family:  "Roboto Condensed", sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.6;   /* Altura de línea para mejor legibilidad */
+  margin-bottom: 15px; /* Espacio entre párrafos */
+}
+
+
+
+
+/*///*/
+
+
+/* Contenedor principal que aloja los dos "feature-container" lado a lado */
+.feature-row {
+  display: flex;
+  flex-wrap: wrap;      /* Permite que se ajusten en pantallas pequeñas */
+  gap: 1.5rem;         /* Espacio horizontal/vertical entre contenedores */
+  margin-bottom: 2rem; /* Espacio inferior */
+}
+
+/* Cada uno de los contenedores de contenido */
+.feature-container {
+  flex: 1 1 calc(50% - 1.5rem); /* Aproximadamente la mitad del ancho */
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 5px;
+  /* Sombra opcional:
+     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  */
+}
+
+.feature-container h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+/* Lista principal: sin viñetas, márgenes ni relleno */
+.feature-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Elemento de la lista con una línea divisoria en la parte inferior */
+.feature-list-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* Ícono del check */
+.icon-check {
+  margin-right: 0.5rem;
+  color: #28a745; /* Verde */
+}
+
+/* Párrafo de la característica/beneficio */
+.feature-paragraph {
+  margin: 0;
+  color: #495057;
+  line-height: 1.4;
+  font-size: 1rem;
+}

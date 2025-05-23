@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Django CRUD</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Textos.css' %}">
+    <link rel="stylesheet" href="{% static 'css/InputStyles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/NavBar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/inicio.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pieDePagina.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100;1,100&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+</head>
+<body>
+{% include '_navbar.html' %}
+
+{% block content %}
+{% endblock %}
+
+<!-- Pie de Página -->
+<footer class="footer bg-dark text-white py-4">
+    <div class="container">
+        <div class="row">
+            <!-- Información de Contacto -->
+            <div class="col-md-4">
+                <h5>Contacto</h5>
+                <p>
+                    <i class="fas fa-envelope"></i> Fer_PerGo253@outlook.com<br>
+                    <i class="fas fa-phone"></i> +52 953 208 00 25
+                </p>
+            </div>
+            <!-- Enlaces Rápidos -->
+            <div class="col-md-4">
+                <h5>Enlaces Rápidos</h5>
+                <ul class="list-unstyled">
+                    <li><a href="" class="text-white">Inicio</a></li>
+                    <li><a href="/UserGuide" class="text-white">Guia de Uso</a></li>
+                    <li><a href="/signin" class="text-white">Iniciar Sesión</a></li>
+                    <li><a href="/signup" class="text-white">Registrarse</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="bg-light">
+        <div class="text-center">
+            &copy; 2025 PerGo Software. Todos los derechos reservados.
+        </div>
+    </div>
+</footer>
+
+<!-- Vincular Bootstrap JS y dependencias -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+
+</html>
+
