@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import json
+from google.oauth2 import service_account
 
 load_dotenv()
 
@@ -24,11 +25,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-credential_path = "/tmp/credentials.json"
-# Escribir el contenido JSON desde la variable de entorno a un archivo temporal
-with open(credential_path, "w") as f:
-    f.write(os.getenv("GOOGLE_CREDENTIALS_JSON"))
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
+
+# Cargar el JSON desde la variable de entorno
+json_str = os.getenv("GOOGLE_CREDENTIALS_JSON")  # ó usar django-environ env()
+cred_dict = json.loads(json_str)
+# Reemplazar \\n por \n reales en la clave privada, si es necesario
+cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
+# Crear credenciales a partir del diccionario
+GS_CREDENTIALS = service_account.Credentials.from_service_account_info(cred_dict)
 
 SECRET_KEY = os.getenv("DJ_SECRET")
 
@@ -45,8 +49,8 @@ PAYPAL_PLAN_ID = os.getenv("PAYPAL_PLAN_ID")
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1'
-]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web-production-ef96f.up.railway.app'
+                 ]
 
 CSRF_TRUSTED_ORIGINS = [
 
