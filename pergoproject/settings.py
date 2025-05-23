@@ -63,7 +63,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web-production-ef96f.up.railway.app'
                  ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://*'
+    'http://*','https://web-production-ef96f.up.railway.app'
 
 ]
 
@@ -164,7 +164,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
 LOGIN_URL = '/signin'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
