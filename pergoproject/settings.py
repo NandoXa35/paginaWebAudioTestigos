@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 import json
 from google.oauth2 import service_account
 import base64
+import dj_database_url
 
 load_dotenv()
 
@@ -57,7 +58,7 @@ PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET")
 PAYPAL_ENV = os.getenv("PAYPAL_ENV")
 PAYPAL_PLAN_ID = os.getenv("PAYPAL_PLAN_ID")
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web-production-ef96f.up.railway.app'
                  ]
@@ -117,11 +118,10 @@ WSGI_APPLICATION = 'pergoproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+DATABASE_URL=os.getenv("DATABASE_URL")
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(default=DATABASE_URL)
 }
 
 # Password validation

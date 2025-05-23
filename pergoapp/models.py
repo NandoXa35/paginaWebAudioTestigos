@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class Radio(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="radio")
-    nombre_radio = models.CharField(max_length=100)
+    nombre_radio = models.CharField(max_length=100,unique=True)
     siglas = models.CharField(max_length=20, unique=True)
     correo_electronico = models.EmailField()
     estado = models.CharField(max_length=100)
