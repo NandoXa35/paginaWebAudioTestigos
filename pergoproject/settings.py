@@ -57,7 +57,7 @@ PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET")
 PAYPAL_ENV = os.getenv("PAYPAL_ENV")
 PAYPAL_PLAN_ID = os.getenv("PAYPAL_PLAN_ID")
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web-production-ef96f.up.railway.app'
                  ]
@@ -166,7 +166,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/signin'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
