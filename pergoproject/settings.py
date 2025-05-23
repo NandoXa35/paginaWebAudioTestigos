@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -22,6 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
+credential_path = "/tmp/credentials.json"
+# Escribir el contenido JSON desde la variable de entorno a un archivo temporal
+with open(credential_path, "w") as f:
+    f.write(os.environ["GOOGLE_CREDENTIALS_JSON"])
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
 SECRET_KEY = os.getenv("DJ_SECRET")
 
