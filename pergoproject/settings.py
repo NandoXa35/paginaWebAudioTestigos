@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import json
 from google.oauth2 import service_account
+import base64
 
 load_dotenv()
 
@@ -26,14 +27,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 
-# Cargar el JSON desde la variable de entorno
-json_str = os.getenv("GOOGLE_CREDENTIALS_JSON")  # ó usar django-environ env()
-print(json_str)
-cred_dict = json.loads(json_str)
-# Reemplazar \\n por \n reales en la clave privada, si es necesario
-cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
-# Crear credenciales a partir del diccionario
-GS_CREDENTIALS = service_account.Credentials.from_service_account_info(cred_dict)
+# Leer variable de entorno con JSON codificado en base64
+b64_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
+
+if b64_json:
+    # Decodificar de base64 a string
+    json_str = base64.b64decode(b64_json).decode("utf-8")
+
+    # Cargar como diccionario Python
+    cred_dict = json.loads(json_str)
+
+    # Reparar la clave privada (por si quedó con '\\n' en lugar de saltos reales)
+    if "private_key" in cred_dict:
+        cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
+
+    # Crear objeto de credenciales
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(cred_dict)
 
 SECRET_KEY = os.getenv("DJ_SECRET")
 
