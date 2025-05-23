@@ -10,8 +10,6 @@ class Radio(models.Model):
     correo_electronico = models.EmailField()
     estado = models.CharField(max_length=100)
     software = models.IntegerField(default=0)
-
-
     estado_suscripcion = models.CharField(
         max_length=20,
         choices=[("Activo", "Activo"), ("Inactivo", "Inactivo"),("Cancelado", "Cancelado")],  #Cancelado

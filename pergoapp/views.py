@@ -471,6 +471,11 @@ def paypal_cancel(request):
 
 @csrf_exempt
 def paypal_webhook(request):
+
+    print(request)
+
+    print('entrando')
+
     data = json.loads(request.body.decode('utf-8'))
     event_type = data.get("event_type")
     resource = data.get("resource", {})
