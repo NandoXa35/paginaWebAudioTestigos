@@ -28,6 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Cargar el JSON desde la variable de entorno
 json_str = os.getenv("GOOGLE_CREDENTIALS_JSON")  # ó usar django-environ env()
+print(json_str)
 cred_dict = json.loads(json_str)
 # Reemplazar \\n por \n reales en la clave privada, si es necesario
 cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
@@ -47,12 +48,13 @@ PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET")
 PAYPAL_ENV = os.getenv("PAYPAL_ENV")
 PAYPAL_PLAN_ID = os.getenv("PAYPAL_PLAN_ID")
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web-production-ef96f.up.railway.app'
                  ]
 
 CSRF_TRUSTED_ORIGINS = [
+    'http://*'
 
 ]
 
