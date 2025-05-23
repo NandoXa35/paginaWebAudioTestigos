@@ -22,6 +22,9 @@ urlpatterns = [
     path('paypal/cancel/', views.paypal_cancel, name='paypal_cancel'),
     path('paypal/webhook/', views.paypal_webhook, name='paypal_webhook'),
 
+    # Alias sin barra para evitar el 500:
+    path('paypal/webhook', views.paypal_webhook),
+
     path('upload/get_signed_download_url/', views.get_signed_download_url, name='get_signed_download_url'),
 
     path('upload/upload-complete/', views.upload_complete, name='upload-complete'),
