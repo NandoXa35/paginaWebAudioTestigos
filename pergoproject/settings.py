@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 credential_path = "/tmp/credentials.json"
 # Escribir el contenido JSON desde la variable de entorno a un archivo temporal
 with open(credential_path, "w") as f:
-    f.write(os.environ["GOOGLE_CREDENTIALS_JSON"])
+    f.write(os.getenv["GOOGLE_CREDENTIALS_JSON"])
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
 SECRET_KEY = os.getenv("DJ_SECRET")
