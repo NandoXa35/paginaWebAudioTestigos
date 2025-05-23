@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from google.cloud import storage
 from django.conf import settings
 
-BUCKET_NAME = settings.GCP_BUCKET_NAME  # "gcs-bucket-audiotestigos"
+BUCKET_NAME = settings.GCP_BUCKET_NAME  #
 SUBFOLDERS = ("grabaciones_dia", "audios_generados", "Campañas","Configuracion","Logs","Informes")
 
 

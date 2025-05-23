@@ -121,7 +121,6 @@ def Downloads(request):
 
     client = storage.Client()
     bucket = settings.GCP_BUCKET_NAME
-    print(bucket)
 
     blob_name   = "ArchivosPaginaWeb2025GeneradorAudTestigos/LinkDescarga/Generador_De_Audio_Testigos_Installer.exe"    # ruta dentro del bucket
 
@@ -488,44 +487,3 @@ def paypal_webhook(request):
         radio.save()
 
     return HttpResponse(status=200)
-
-@api_view(['POST'])
-@authentication_classes([TokenAuthentication])
-def iniciar_proceso(request):
-    """
-    Inicia un proceso en Google Cloud Run.
-    Espera {"fecha": "DDMMAAAA", "siglas": "ABC", "bucket": "nombre-del-bucket"}
-    """
-    user = request.user.username
-    fecha = request.data.get('fecha')
-    radio = Radio.objects.filter(user=usuario).first()
-    siglas = radio.siglas
-    bucket='audio_estigos_project'
-
-    if not all([fecha, siglas, bucket]):
-        return Response({'error': 'Faltan parámetros requeridos.'}, status=400)
-
-    # Construir la URL del servicio de Cloud Run
-    cloud_run_url = f"https://{settings.CLOUD_RUN_REGION}-run.googleapis.com/apis/serving.knative.dev/v1/namespaces/{settings.GCP_PROJECT_ID}/services/{settings.CLOUD_RUN_SERVICE_NAME}:run"
-
-    # Payload para la solicitud
-    payload = {
-        "user": user,
-        "bucket": bucket,
-        "siglas": siglas,
-        "fecha": fecha
-    }
-
-    # Encabezados de autenticación
-    headers = {
-        "Authorization": f"Bearer {settings.GCP_ACCESS_TOKEN}",
-        "Content-Type": "application/json"
-    }
-
-    # Realizar la solicitud POST al servicio de Cloud Run
-    response = requests.post(cloud_run_url, json=payload, headers=headers)
-
-    if response.status_code == 200:
-        return Response({'status': 'Proceso iniciado correctamente.'})
-    else:
-        return Response({'error': 'Error al iniciar el proceso en Cloud Run.', 'details': response.text}, status=500)
