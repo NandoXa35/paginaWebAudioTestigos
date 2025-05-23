@@ -119,7 +119,7 @@ def UserGuide(request):
 def Downloads(request):
     """Vista que muestra el enlace de descarga."""
 
-    client = storage.Client()
+    client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = settings.GCP_BUCKET_NAME
 
     blob_name   = "ArchivosPaginaWeb2025GeneradorAudTestigos/LinkDescarga/Generador_De_Audio_Testigos_Installer.exe"    # ruta dentro del bucket
@@ -237,7 +237,7 @@ def crear_carpeta_gcs(request):
     user_id = request.user.username
     ruta = f"{user_id}/{Categoria_Carpeta}/{nombre}"
 
-    client = storage.Client()
+    client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = client.bucket(settings.GCP_BUCKET_NAME)
 
     # Verificar si ya hay blobs con ese prefijo
@@ -268,7 +268,7 @@ def borrar_archivo(request):
     if not path:
         return Response({'error': 'Falta el parámetro "nombre".'}, status=400)
 
-    client = storage.Client()
+    client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = client.bucket(settings.GCP_BUCKET_NAME)
 
     blob = bucket.blob(path)

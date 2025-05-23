@@ -14,7 +14,7 @@ SUBFOLDERS = ("grabaciones_dia", "audios_generados", "Campañas","Configuracion"
 def generate_upload_signed_url(bucket_name, blob_name, content_type=None):
     print(blob_name)
     print(bucket_name)
-    client = storage.Client()
+    client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
     url = blob.generate_signed_url(
@@ -26,7 +26,7 @@ def generate_upload_signed_url(bucket_name, blob_name, content_type=None):
     return url
 
 def generate_download_signed_url(bucket_name, blob_name, expiration_minutes=15):
-    storage_client = storage.Client()
+    storage_client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
 
@@ -38,7 +38,7 @@ def generate_download_signed_url(bucket_name, blob_name, expiration_minutes=15):
     return url
 
 def listar_archivos(bucket_name, nom_Carpeta, user):
-    client = storage.Client()
+    client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = client.bucket(bucket_name)
 
     ruta = f"{user}/{nom_Carpeta}"
@@ -62,7 +62,7 @@ def bootstrap_carpetas_usuario(sender, instance, created, **kwargs):
     if not created:
         return
 
-    bucket = storage.Client().bucket(settings.GCP_BUCKET_NAME)
+    bucket = storage.Client(credentials=settings.GS_CREDENTIALS).bucket(settings.GCP_BUCKET_NAME)
     user_prefix = f"{instance.username}/"  # ← ahora usa username
 
     for sub in SUBFOLDERS:
