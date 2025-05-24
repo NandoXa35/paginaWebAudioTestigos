@@ -37,16 +37,7 @@
         No tienes una suscripción activa.
     </div>
 
-{% load static %}
-<form action="{% url 'create_subscription' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn-paypal">
-        <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-mark-color.svg"
-             alt="PayPal" class="pp-logo">
-        <span class="pp-text">Suscribirme · $899 MXN/mes</span>
-    </button>
-</form>
-<!--
+
     {# -----------  Botón para crear suscripción ----------- #}
     <form action="{% url 'create_subscription' %}" method="post">
         {% csrf_token %}
@@ -54,7 +45,7 @@
             Suscribirme por $899 MXN/mes
         </button>
     </form>
--->
+
 
     {% endif %}
     <div style="height: 20px;"></div>
