@@ -5,6 +5,7 @@ from .models import Radio
 
 from django.utils import timezone
 import requests
+from django.utils import timezone
 
 def consultar_estado_paypal(subscription_id, access_token):
     url = f"https://api-m.paypal.com/v1/billing/subscriptions/{subscription_id}"
@@ -16,7 +17,6 @@ def consultar_estado_paypal(subscription_id, access_token):
     response.raise_for_status()
     return response.json()
 
-from django.utils import timezone
 
 def actualizar_estado_radio(radio, datos_paypal):
     status = datos_paypal.get("status")
