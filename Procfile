@@ -1,2 +1,1 @@
-release: python manage.py migrate && python manage.py collectstatic --noinput
-web: gunicorn pergoproject.wsgi
+web: python manage.py collectstatic && gunicorn pergoproject.wsgi
