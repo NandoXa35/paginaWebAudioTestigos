@@ -52,7 +52,7 @@ from django.conf import settings
 
 from .utils import consultar_estado_paypal, actualizar_estado_radio
 
-_publisher = pubsub_v1.PublisherClient()
+_publisher = pubsub_v1.PublisherClient(credentials=GS_CREDENTIALS)
 _TOPIC_PATH = _publisher.topic_path(
     settings.GCP_BUCKET_JOB_NAME,
     settings.GPU_JOB_TOPIC_ID  # "audio-gpu-jobs"
