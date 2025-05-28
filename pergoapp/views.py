@@ -159,20 +159,11 @@ def UserGuide(request):
 def Downloads(request):
     """Vista que muestra el enlace de descarga."""
 
-    client = storage.Client(credentials=settings.GS_CREDENTIALS)
-    bucket = 'datos_web_audio_testigos'
-
-    blob_name = blob_name = "prorgramas/GenAudTes_Installer.exe"  # Esto es lo que debe contener el nombre del archivo en el bucket
-
-    signed_url = generate_download_signed_url(bucket, blob_name)
-
     context = {
-        "download_url": signed_url,
-        "archivo": blob_name.split("/")[-1],
-        "expira": 15,  # minutos
+        "download_url": 'https://storage.googleapis.com/datos_web_audio_testigos/prorgramas/GenAudTes_Installer.exe',
     }
 
-    return render(request, 'Downloads.html', context)
+    return render(request, 'Downloads.html',context)
 
 
 def signin(request):
@@ -349,6 +340,8 @@ def get_signed_url(request):
 @authentication_classes([TokenAuthentication])
 def get_signed_download_url(request):
     file_name = request.data.get('file_name')
+
+    print(file_name)
 
     bucket_name = settings.GCP_BUCKET_NAME
 

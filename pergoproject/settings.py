@@ -62,8 +62,9 @@ PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET")
 PAYPAL_ENV = os.getenv("PAYPAL_ENV")
 PAYPAL_PLAN_ID = os.getenv("PAYPAL_PLAN_ID")
 
-DEBUG = False
-
+DEBUG = True
+GCP_BUCKET_NAME_DATOS_WEB=os.getenv("GCP_BUCKET_NAME_DATOS_WEB")
+print(GCP_BUCKET_NAME_DATOS_WEB)
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web-production-ef96f.up.railway.app','generatestigo.com','www.generatestigo.com'
                  ]
 

@@ -25,16 +25,53 @@ def generate_upload_signed_url(bucket_name, blob_name, content_type=None):
     )
     return url
 
+
+def generate_signed_url_with_headers(bucket_name, blob_name, expiration_minutes=15, http_method="GET", headers=None):
+    """
+    Genera una URL firmada para acceder a un objeto en Google Cloud Storage con encabezados personalizados.
+
+    :param bucket_name: Nombre del bucket en Google Cloud Storage.
+    :param blob_name: Nombre del objeto (archivo) dentro del bucket.
+    :param expiration_minutes: Tiempo en minutos que la URL firmada será válida.
+    :param http_method: Método HTTP permitido (por ejemplo, 'GET', 'PUT').
+    :param headers: Diccionario de encabezados personalizados que deben incluirse en la solicitud.
+    :return: URL firmada que puede ser utilizada para acceder al objeto con los encabezados especificados.
+    """
+    # Crear un cliente de almacenamiento
+    client = storage.Client()
+
+    # Obtener el objeto (blob) del bucket
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    # Establecer los encabezados predeterminados si no se proporcionan
+    if headers is None:
+        headers = {}
+
+    # Incluir encabezados personalizados en la solicitud
+    signed_url = blob.generate_signed_url(
+        version="v4",
+        expiration=datetime.timedelta(minutes=expiration_minutes),
+        method=http_method,
+        headers=headers
+    )
+
+    return signed_url
+
 def generate_download_signed_url(bucket_name, blob_name, expiration_minutes=15):
     storage_client = storage.Client(credentials=settings.GS_CREDENTIALS)
+    print(storage_client)
     bucket = storage_client.bucket(bucket_name)
+    print(bucket)
     blob = bucket.blob(blob_name)
+    print(blob)
 
     url = blob.generate_signed_url(
         version="v4",
         expiration=datetime.timedelta(minutes=15),
         method="GET",
     )
+    print(url)
     return url
 
 def listar_archivos(bucket_name, nom_Carpeta, user):
