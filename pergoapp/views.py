@@ -160,7 +160,7 @@ def Downloads(request):
     """Vista que muestra el enlace de descarga."""
 
     client = storage.Client(credentials=settings.GS_CREDENTIALS)
-    bucket = settings.GCP_BUCKET_NAME
+    bucket = 'datos_web_audio_testigos'
 
     blob_name = "https://storage.cloud.google.com/datos_web_audio_testigos/prorgramas/GenAudTes_Installer.exe"  # ruta dentro del bucket
 
