@@ -62,13 +62,14 @@ PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET")
 PAYPAL_ENV = os.getenv("PAYPAL_ENV")
 PAYPAL_PLAN_ID = os.getenv("PAYPAL_PLAN_ID")
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web-production-ef96f.up.railway.app','generatestigo.com','www.generatestigo.com'
                  ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://*','https://web-production-ef96f.up.railway.app',
+    'http://*','https://web-production-ef96f.up.railway.app','https://generatestigo.com',
+    'https://www.generatestigo.com',
 ]
 
 # Application definition
