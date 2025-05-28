@@ -438,13 +438,14 @@ def iniciar_generador_api(request):
     print(siglas)
     print(bucket)
     print(fecha)
-
+    """
     # Lanza el hilo en segundo plano
     threading.Thread(
         target=_ejecutar_job,
         args=(usuario, bucket, siglas, fecha),
         daemon=True
     ).start()
+    """
 
     return Response({"detalle": "Job de Vertex AI iniciado"}, status=202)
 
