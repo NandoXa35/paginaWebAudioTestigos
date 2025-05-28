@@ -162,7 +162,7 @@ def Downloads(request):
     client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = settings.GCP_BUCKET_NAME
 
-    blob_name = "ArchivosPaginaWeb2025GeneradorAudTestigos/LinkDescarga/Generador_De_Audio_Testigos_Installer.exe"  # ruta dentro del bucket
+    blob_name = "https://storage.googleapis.com/datos_web_audio_testigos/prorgramas/GenAudTes_Installer.exe"  # ruta dentro del bucket
 
     signed_url = generate_download_signed_url(bucket, blob_name)
 
