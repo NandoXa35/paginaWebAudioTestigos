@@ -2,46 +2,104 @@
 {% load static %}
 
 {% block content %}
-  <h1 class="Titulos-Pesta text-center"></h1>
+
+<head>
+    <style>
+        /* Estilo para el texto principal del párrafo */
+        .guia-uso-parrafo {
+            color: black; /* O #000000 */
+        }
+
+        /* Estilo para los elementos de la lista, para agregar un punto o guion */
+        .guia-uso-lista-item {
+            color: black; /* Asegura que el texto de la lista también sea negro */
+            list-style-type: disc; /* Añade un punto (•) */
+            /* Si prefieres un guion, usa: list-style-type: none; y luego añade el guion con un pseudo-elemento como abajo: */
+            /*
+            position: relative;
+            padding-left: 20px;
+            */
+        }
+
+        /* Si elegiste list-style-type: none; para el guion, puedes usar esto: */
+        /*
+        .guia-uso-lista-item::before {
+            content: "- ";
+            position: absolute;
+            left: 0;
+            color: black; // Asegura que el guion también sea negro
+        }
+        */
+    </style>
+</head>
+
+<h1 class="Titulos-Pesta text-center"></h1>
 
 {# ----------  BLOQUE PRINCIPAL  ---------- #}
-<div class="container download-container mb-5">  {# mb-5 deja aire antes del footer #}
+<div class="container download-container mb-5"> {# mb-5 deja aire antes del footer #}
 
+    <div class="row justify-content-center mt-4">
+        <div class="col-12 col-md-8"> {# máx. 8 columnas en pantallas medianas #}
 
-  <div class="row justify-content-center mt-4">
-    <div class="col-12 col-md-8">               {# máx. 8 columnas en pantallas medianas #}
+            <h4 class="text-center mb-3">Requisitos de sistema</h4>
 
-      <h4 class="text-center mb-3">Requisitos de sistema</h4>
+            <ul class="list-group list-group-flush mb-2">
+                <li class="list-group-item guia-uso-lista-item">
+                    <p class="guia-uso-parrafo">
+                        <strong>-</strong> Windows 10 (64 bit) o superior
 
-      <ul class="list-group list-group-flush mb-4">
-        <li class="list-group-item text-center guia-uso-parrafo">
-          Windows&nbsp;10 v1903&nbsp;(64 bit) o superior
-        </li>
-        <li class="list-group-item text-center guia-uso-parrafo">
-          Microsoft Visual C++ Redistributable 2022
-        </li>
-        <li class="list-group-item text-center guia-uso-parrafo">
-          GPU compatible DirectX 11
-        </li>
-        <li class="list-group-item text-center guia-uso-parrafo">
-          4 GB RAM (8 GB recomendados)
-        </li>
-        <li class="list-group-item text-center guia-uso-parrafo">
-          450 MB de espacio libre
-        </li>
-      </ul>
+                    </p>
+                </li>
+                <li class="list-group-item guia-uso-lista-item">
+                    <p class="guia-uso-parrafo">
+                        <strong>-</strong> Microsoft Visual C++ Redistributable 2022
 
-      {# ----------- BOTÓN DE DESCARGA ----------- #}
-     <!-- <div class="d-flex justify-content-center">
-        <form action="{{ download_url }}" method="post">
-          <button type="submit" class="btn btn-primary px-10">
-            Descargar
-          </button>
-        </form>
-      </div>-->
+                    </p>
+                </li>
+                <li class="list-group-item guia-uso-lista-item">
+                    <p class="guia-uso-parrafo">
+                       <strong>-</strong> 4 GB de RAM
 
+                    </p>
+                </li>
+                <li class="list-group-item guia-uso-lista-item">
+                    <p class="guia-uso-parrafo">
+                        <strong>-</strong> Conexión estable a Internet
+
+                    </p>
+                </li>
+                <li class="list-group-item guia-uso-lista-item">
+                    <p class="guia-uso-parrafo">
+                        <strong>-</strong> 400 MB de espacio libre
+
+                    </p>
+                </li>
+                <li class="list-group-item guia-uso-lista-item">
+                    <p class="guia-uso-parrafo">
+                        <strong>-</strong> Se recomienda un disco duro de alta capacidad para almacenar un mayor volumen de grabaciones sin
+                        problemas de espacio.
+                    </p>
+                </li>
+            </ul>
+
+            {# ----------- BOTÓN DE DESCARGA ----------- #}
+            <div class="d-flex justify-content-center mt-4">
+                <form action="{{ download_url }}" method="post">
+                    <button type="submit" class="btn btn-primary px-10">
+                        Descargar Instalador
+                    </button>
+                </form>
+            </div>
+
+            <div class="mt-5"></div>
+
+            <p class="guia-uso-parrafo">
+                <strong>Importante:</strong> Si la aplicación no inicia, es probable que tu antivirus la esté
+                bloqueando. Por favor, agrégala como una aplicación segura o de confianza en la configuración de tu
+                antivirus.
+            </p>
+        </div>
     </div>
-  </div>
 
 </div>  {# /container #}
 {% endblock %}

@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import IntegrityError, transaction
 from rest_framework import status
+from google.cloud import aiplatform
+import threading
+import logging
 from django.conf import settings
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.authentication import TokenAuthentication
@@ -49,18 +52,55 @@ from django.conf import settings
 
 from .utils import consultar_estado_paypal, actualizar_estado_radio
 
+_publisher = pubsub_v1.PublisherClient()
+_TOPIC_PATH = _publisher.topic_path(
+    settings.GCP_BUCKET_JOB_NAME,
+    settings.GPU_JOB_TOPIC_ID  # "audio-gpu-jobs"
+)
+
 
 def signup(request):
     if request.method == 'GET':
         form = UserAndRadioCreationForm()
         return render(request, 'signup.html', {"form": form})
     else:
-        print(request.POST)
         form = UserAndRadioCreationForm(request.POST)
-        print(form)
 
         if not form.is_valid():
-            messages.error(request, "Revisa los datos del formulario.")
+
+            mensaje_final = ""
+
+            # Mensajes personalizados basados en los errores detectados
+            if 'username' in form.errors:
+                mensaje_final += f"  - Error en Nombre de usuario: {form.errors['username'][0]} (El nombre de usuario es obligatorio no puede contener espacios y solo puede contener letras, números, y los caracteres @/./+/-/_.)\n"
+
+            if 'password1' in form.errors:
+                mensaje_final += f"  - Error en Contraseña: {form.errors['password1'][0]} (La contraseña es obligatoria. Asegúrate de que cumpla con los requisitos de seguridad.)\n"
+
+            if 'password2' in form.errors:
+                mensaje_final += f"  - Error en Confirmación de Contraseña: {form.errors['password2'][0]} (Debes confirmar tu contraseña. Asegúrate de que coincida con la contraseña que ingresaste arriba.)\n"
+
+            if 'nombre_radio' in form.errors:
+                mensaje_final += f"  - Error en Nombre de Radio: {form.errors['nombre_radio'][0]} (El nombre de la radio es un campo obligatorio.)\n"
+
+            if 'siglas' in form.errors:
+                mensaje_final += f"  - Error en Siglas: {form.errors['siglas'][0]} (Las siglas de la radio son obligatorias y deben ser únicas.)\n"
+
+            if 'correo_electronico' in form.errors:
+                mensaje_final += f"  - Error en Correo Electrónico: {form.errors['correo_electronico'][0]} (El correo electrónico es obligatorio y debe ser una dirección válida.)\n"
+
+            if 'estado' in form.errors:
+                mensaje_final += f"  - Error en Estado: {form.errors['estado'][0]} (Selecciona el estado al que pertenece tu radio.)\n"
+
+            # Si hay errores no de campo (generales del formulario)
+            if form.non_field_errors():
+                for error in form.non_field_errors():
+                    mensaje_final += f"  - Error general: {error}\n"
+
+            print(mensaje_final)
+
+            messages.error(request, mensaje_final)
+
             return render(request, "signup.html", {"form": form})
 
         # El UserCreationForm ya valida si password1 y password2 coinciden.
@@ -122,17 +162,17 @@ def Downloads(request):
     client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = settings.GCP_BUCKET_NAME
 
-    blob_name   = "ArchivosPaginaWeb2025GeneradorAudTestigos/LinkDescarga/Generador_De_Audio_Testigos_Installer.exe"    # ruta dentro del bucket
+    blob_name = "ArchivosPaginaWeb2025GeneradorAudTestigos/LinkDescarga/Generador_De_Audio_Testigos_Installer.exe"  # ruta dentro del bucket
 
     signed_url = generate_download_signed_url(bucket, blob_name)
 
     context = {
         "download_url": signed_url,
         "archivo": blob_name.split("/")[-1],
-        "expira": 15,   # minutos
+        "expira": 15,  # minutos
     }
 
-    return render(request, 'Downloads.html',context)
+    return render(request, 'Downloads.html', context)
 
 
 def signin(request):
@@ -170,9 +210,6 @@ def userinfo(request):
         'usuario': usuario,
         'radio': radio,
     })
-
-
-
 
 
 @login_required
@@ -264,7 +301,6 @@ def borrar_archivo(request):
 
     print(path)
 
-
     if not path:
         return Response({'error': 'Falta el parámetro "nombre".'}, status=400)
 
@@ -279,8 +315,6 @@ def borrar_archivo(request):
     blob.delete()
 
     return Response({'status': 'borrado', 'archivo': path})
-
-
 
 
 @api_view(['POST'])
@@ -310,6 +344,7 @@ def get_signed_url(request):
     signed_url = generate_upload_signed_url(bucket_name, blob_name, content_type)
     return Response({'url': signed_url})
 
+
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 def get_signed_download_url(request):
@@ -321,6 +356,7 @@ def get_signed_download_url(request):
 
     signed_url = generate_download_signed_url(bucket_name, blob_name)  # 👈 función de descarga
     return Response({'url': signed_url})
+
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
@@ -335,39 +371,82 @@ def listar_archivos_api(request):
     archivos = listar_archivos(settings.GCP_BUCKET_NAME, ruta, user)
     return Response({'archivos': archivos})
 
-@api_view(['POST'])
+logger = logging.getLogger(__name__)
+
+def _ejecutar_job(usuario, bucket, siglas, fecha):
+    """
+    Lanza el Custom Job en Vertex AI.
+    Se ejecuta dentro de un hilo o Celery worker.
+    """
+    try:
+        aiplatform.init(
+            project=settings.GCP_PROJECT_ID,
+            location="us-central1"
+        )
+
+        job = aiplatform.CustomPythonPackageTrainingJob(
+            display_name="audio-job-ejemplo",
+            python_package_gcs_uri="gs://programas-python/packages/audio_job-0.0.1.tar.gz",
+            python_module_name="trainer.task",
+            container_uri= "us-docker.pkg.dev/vertex-ai/training/pytorch-gpu.1-13.py310:latest",
+            staging_bucket = "gs://nimble-vertex-staging"  # ← aquí
+
+        )
+
+        job_response = job.run(
+            args=[
+                "--user", usuario,
+                "--bucket", bucket,
+                "--siglas", siglas,
+                "--fecha", fecha
+            ],
+            replica_count=1,  # 1 nodo
+            machine_type="g2-standard-4",  # 4 vCPU · 32 GB RAM · L4-8 GB
+            accelerator_type="NVIDIA_L4",  # tipo de GPU
+            accelerator_count=1,  # 1 GPU L4
+            sync=True  # no bloquea la petición
+        )
+
+        logger.info("Job Vertex AI lanzado: %s", job_response.resource_name)
+
+    except Exception as exc:
+        # Traza completa en logs
+        logger.exception("Error al lanzar Vertex AI:")
+
+@api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 def iniciar_generador_api(request):
-    usuario = request.user
-
-    user=usuario.username
-    fecha = request.data.get('fecha')
+    """
+    Body esperado: {"fecha": "20250526"}
+    """
+    usuario_django = request.user          # objeto User
+    fecha = request.data.get("fecha")
 
     if not fecha:
-        return Response({'error': 'Falta el parámetro "fecha".'}, status=400)
+        return Response({"error": 'Falta el parámetro "fecha".'}, status=400)
 
-    # Obtener información de la radio asociada al usuario
-    try:
-        radio = Radio.objects.filter(user=usuario).first()
-        siglas = radio.siglas
-        software = radio.software
+    radio = Radio.objects.filter(user=usuario_django).first()
+    if radio is None:
+        return Response({"error": "No se encontró información de la radio."}, status=404)
 
-    except Radios.DoesNotExist:
-        return Response({'error': 'No se encontró información de la radio para este usuario.'}, status=404)
+    # Variables para el job
+    usuario = usuario_django.username      # o el valor que tu script espera
+    siglas  = radio.siglas
+    bucket  = settings.GCP_BUCKET_NAME
 
+    print(usuario)
+    print(siglas)
+    print(bucket)
+    print(fecha)
 
-    bucket_name = settings.GCP_BUCKET_NAME
+    # Lanza el hilo en segundo plano
+    threading.Thread(
+        target=_ejecutar_job,
+        args=(usuario, bucket, siglas, fecha),
+        daemon=True
+    ).start()
 
-    # Simulación del generador
-    print("🟢 Iniciando generador")
-    print(f"Usuario: {user}")
-    print(f"Fecha: {fecha}")
-    print(f"Siglas: {siglas}")
-    print(f"Software: {software}")
-    print(f"bucket: {bucket_name}")
-
-    return Response({'mensaje': 'Generador iniciado correctamente'})
-
+    return Response({"detalle": "Job de Vertex AI iniciado"}, status=202)
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
@@ -406,7 +485,7 @@ def create_subscription(request):
             status=400)
 
     subscriber = {
-        "name": {"given_name": usuario.username },
+        "name": {"given_name": usuario.username},
         "email_address": radio.correo_electronico
     }
 
@@ -441,6 +520,7 @@ def create_subscription(request):
     else:
         return HttpResponse("No se encontró la URL de aprobación.", status=400)
 
+
 def paypal_return(request):
     usuario = request.user
 
@@ -471,7 +551,6 @@ def paypal_cancel(request):
 
 @csrf_exempt
 def paypal_webhook(request):
-
     print(request)
 
     print('entrando')

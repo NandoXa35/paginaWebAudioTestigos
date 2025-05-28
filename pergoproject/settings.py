@@ -45,6 +45,10 @@ if b64_json:
     # Crear objeto de credenciales
     GS_CREDENTIALS = service_account.Credentials.from_service_account_info(cred_dict)
 
+GPU_JOB_TOPIC_ID=os.getenv("GPU_JOB_TOPIC_ID")
+
+GCP_BUCKET_JOB_NAME=os.getenv("GCP_BUCKET_JOB_NAME")
+
 SECRET_KEY = os.getenv("DJ_SECRET")
 
 GCP_BUCKET_NAME = os.getenv("GCP_BUCKET_NAME")
