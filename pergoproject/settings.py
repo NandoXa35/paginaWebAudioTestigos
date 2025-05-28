@@ -68,7 +68,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web-production-ef96f.up.railway.app'
                  ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://*','https://web-production-ef96f.up.railway.app','generatestigo.com','www.generatestigo.com'
+    'http://*','https://web-production-ef96f.up.railway.app',
 ]
 
 # Application definition
