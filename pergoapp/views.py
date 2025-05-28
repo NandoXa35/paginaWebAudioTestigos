@@ -162,7 +162,7 @@ def Downloads(request):
     client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = 'datos_web_audio_testigos'
 
-    blob_name = "https://storage.cloud.google.com/datos_web_audio_testigos/prorgramas/GenAudTes_Installer.exe"  # ruta dentro del bucket
+    blob_name = blob_name = "prorgramas/GenAudTes_Installer.exe"  # Esto es lo que debe contener el nombre del archivo en el bucket
 
     signed_url = generate_download_signed_url(bucket, blob_name)
 
