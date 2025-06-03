@@ -160,7 +160,7 @@ def Downloads(request):
     """Vista que muestra el enlace de descarga."""
 
     context = {
-        "download_url": 'https://storage.googleapis.com/datos_web_audio_testigos/prorgramas/GenAudTes_Installer.exe',
+        "download_url": 'https://storage.googleapis.com/datos_web_audio_testigos/prorgramas/Instalador_GenAudTes.exe',
     }
 
     return render(request, 'Downloads.html',context)
