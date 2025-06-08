@@ -195,7 +195,6 @@ def userinfo(request):
 
         datos_paypal = consultar_estado_paypal(radio.paypal_subscription_id, access_token)
         actualizar_estado_radio(radio, datos_paypal)
-        print('actualizando')
 
     return render(request, 'userinfo.html', {
         'usuario': usuario,
@@ -212,7 +211,6 @@ def signout(request):
 @api_view(['POST'])
 def ingresar_api(request):
     user = get_object_or_404(User, username=request.data['username'])
-    print(user)
 
     if not user.check_password(request.data['password']):
         return Response({
@@ -252,7 +250,6 @@ def info_suscripcion_api(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 def crear_carpeta_gcs(request):
-    print('crear carpeta')
     """
     Crea una carpeta simulada en el bucket bajo {user_id}/grabaciones_dia/{nombre}
     Espera en el body: {"nombre": "nueva_carpeta"}
@@ -264,6 +261,7 @@ def crear_carpeta_gcs(request):
 
     user_id = request.user.username
     ruta = f"{user_id}/{Categoria_Carpeta}/{nombre}"
+    print(f'crear_carpeta_gcs: {user_id}')
 
     client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = client.bucket(settings.GCP_BUCKET_NAME)
@@ -283,14 +281,11 @@ def crear_carpeta_gcs(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 def borrar_archivo(request):
-    """
-    Borra un archivo específico en el bucket.
-    Espera {"path": "usuario1/grabaciones_dia/26042025/audio1.mp3"}
-    """
     user = request.user.username
     path = request.data.get('archivo')
 
-    print(path)
+    print(f'Borrar Archivos: {user}')
+
 
     if not path:
         return Response({'error': 'Falta el parámetro "nombre".'}, status=400)
@@ -311,12 +306,10 @@ def borrar_archivo(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 def get_signed_url(request):
-    print('holi')
 
     Categoria_Carpeta = request.data.get('Categoria_Carpeta')
     subCarpeta = request.data.get('SubCarpeta')
     file_name = request.data.get('file_name')
-    print(file_name)
 
     if not subCarpeta:
         return Response({'error': 'Falta el parámetro "subCarpeta".'}, status=400)
@@ -326,11 +319,11 @@ def get_signed_url(request):
     user_id = request.user.username
     bucket_name = settings.GCP_BUCKET_NAME  # Nombre de tu bucket GCS
     ruta = f"{user_id}/{Categoria_Carpeta}/{subCarpeta}/{file_name}"
+    print(f'get_signed_url: {user_id}')
 
-    print(ruta)
 
     blob_name = ruta
-    print(blob_name)
+
     content_type = request.data.get('content_type')  # p.ej. "audio/mpeg"
     signed_url = generate_upload_signed_url(bucket_name, blob_name, content_type)
     return Response({'url': signed_url})
@@ -341,11 +334,13 @@ def get_signed_url(request):
 def get_signed_download_url(request):
     file_name = request.data.get('file_name')
 
-    print(file_name)
-
     bucket_name = settings.GCP_BUCKET_NAME
 
     blob_name = file_name
+
+    user_id = request.user.username
+    print(f'get_signed_download_url: {user_id}')
+
 
     signed_url = generate_download_signed_url(bucket_name, blob_name)  # 👈 función de descarga
     return Response({'url': signed_url})
@@ -354,8 +349,9 @@ def get_signed_download_url(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 def listar_archivos_api(request):
-    print('entramos')
     user = request.user.username
+    print(f'listar_archivos_api: {user}')
+
     ruta = request.data.get('ruta')
 
     if not ruta:
@@ -449,6 +445,9 @@ def iniciar_generador_api(request):
 @authentication_classes([TokenAuthentication])
 def upload_complete(request):
     user_id = request.data.get('user_id')
+
+    print(f'upload_complete: {user_id}')
+
     folder = request.data.get('folder')
     if not user_id or not folder:
         return Response({'error': 'Faltan parámetros.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -474,6 +473,8 @@ def create_subscription(request):
     cancel_url = request.build_absolute_uri(reverse('paypal_cancel'))
 
     usuario = request.user
+    print(f'create_subscription: {usuario}')
+
     radio = Radio.objects.filter(user=usuario).first()
 
     if not radio.correo_electronico:
@@ -548,9 +549,7 @@ def paypal_cancel(request):
 
 @csrf_exempt
 def paypal_webhook(request):
-    print(request)
-
-    print('entrando')
+    print(f'paypal_webhook')
 
     data = json.loads(request.body.decode('utf-8'))
     event_type = data.get("event_type")

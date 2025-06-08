@@ -12,8 +12,6 @@ SUBFOLDERS = ("grabaciones_dia", "audios_generados", "Campañas","Configuracion"
 
 
 def generate_upload_signed_url(bucket_name, blob_name, content_type=None):
-    print(blob_name)
-    print(bucket_name)
     client = storage.Client(credentials=settings.GS_CREDENTIALS)
     bucket = client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
@@ -60,18 +58,14 @@ def generate_signed_url_with_headers(bucket_name, blob_name, expiration_minutes=
 
 def generate_download_signed_url(bucket_name, blob_name, expiration_minutes=15):
     storage_client = storage.Client(credentials=settings.GS_CREDENTIALS)
-    print(storage_client)
     bucket = storage_client.bucket(bucket_name)
-    print(bucket)
     blob = bucket.blob(blob_name)
-    print(blob)
 
     url = blob.generate_signed_url(
         version="v4",
         expiration=datetime.timedelta(minutes=15),
         method="GET",
     )
-    print(url)
     return url
 
 def listar_archivos(bucket_name, nom_Carpeta, user):
@@ -80,11 +74,9 @@ def listar_archivos(bucket_name, nom_Carpeta, user):
 
     ruta = f"{user}/{nom_Carpeta}"
 
-    print(ruta)
 
     blobs = bucket.list_blobs(prefix=ruta)  # Ej: '123/grabaciones_dia/26042025/'
 
-    print(blobs)
 
     archivos = []
     for blob in blobs:
