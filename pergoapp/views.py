@@ -374,9 +374,9 @@ def _ejecutar_job(usuario, bucket, siglas, fecha):
     try:
 
         # 1️⃣  Convertir a dict si es string
-        cred_info = (settings.GS_CREDENCIALS
-                     if isinstance(settings.GS_CREDENCIALS, dict)
-                     else json.loads(settings.GS_CREDENCIALS))
+        cred_info = (settings.GS_CREDENTIALS
+                     if isinstance(settings.GS_CREDENTIALS, dict)
+                     else json.loads(settings.GS_CREDENTIALS))
 
         creds = service_account.Credentials.from_service_account_info(cred_info)
 
