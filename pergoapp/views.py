@@ -366,11 +366,13 @@ def listar_archivos_api(request):
 
 logger = logging.getLogger(__name__)
 
-def _ejecutar_job(usuario, bucket, siglas, fecha):
+def _ejecutar_job(usuario, bucket, siglas, fecha,software):
     """
     Lanza el Custom Job en Vertex AI.
     Se ejecuta dentro de un hilo o Celery worker.
     """
+    IMAGE_URI = ["us-central1-docker.pkg.dev/nimble-depot-456123-n0/vertex-training/audio-training-cu124-corregido:v1",]
+
     try:
 
         # 2️⃣  Vertex AI ► init con creds
@@ -381,13 +383,12 @@ def _ejecutar_job(usuario, bucket, siglas, fecha):
             credentials=settings.GS_CREDENTIALS,  # ← aquí va
         )
 
-        IMAGE_URI = "us-central1-docker.pkg.dev/nimble-depot-456123-n0/vertex-training/audio-training-cu124-corregido:v1"
 
         nombre_job = f"Generando archivos {usuario}-{siglas}-{fecha}"
 
         job = aiplatform.CustomContainerTrainingJob(
             display_name=nombre_job,
-            container_uri=IMAGE_URI,
+            container_uri=IMAGE_URI[software],
         )
 
         job_response = job.run(
@@ -430,16 +431,14 @@ def iniciar_generador_api(request):
     usuario = usuario_django.username      # o el valor que tu script espera
     siglas  = radio.siglas
     bucket  = settings.GCP_BUCKET_NAME
+    software=radio.software
 
-    print(usuario)
-    print(siglas)
-    print(bucket)
-    print(fecha)
+    print(f'Iniciando generador {usuario}-{siglas}-{fecha}-{software}')
 
     # Lanza el hilo en segundo plano
     threading.Thread(
         target=_ejecutar_job,
-        args=(usuario, bucket, siglas, fecha),
+        args=(usuario, bucket, siglas, fecha,software),
         daemon=True
     ).start()
 
