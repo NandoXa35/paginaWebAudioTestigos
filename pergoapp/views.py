@@ -373,19 +373,12 @@ def _ejecutar_job(usuario, bucket, siglas, fecha):
     """
     try:
 
-        # 1️⃣  Convertir a dict si es string
-        cred_info = (settings.GS_CREDENTIALS
-                     if isinstance(settings.GS_CREDENTIALS, dict)
-                     else json.loads(settings.GS_CREDENTIALS))
-
-        creds = service_account.Credentials.from_service_account_info(cred_info)
-
         # 2️⃣  Vertex AI ► init con creds
         aiplatform.init(
             project=settings.GCP_PROJECT_ID,
             location="us-central1",
             staging_bucket="gs://nimble-vertex-staging",
-            credentials=creds,  # ← aquí va
+            credentials=settings.GS_CREDENTIALS,  # ← aquí va
         )
 
         IMAGE_URI = "us-central1-docker.pkg.dev/nimble-depot-456123-n0/vertex-training/audio-training-cu124-corregido:v1"
