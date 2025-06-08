@@ -372,18 +372,20 @@ def _ejecutar_job(usuario, bucket, siglas, fecha):
     Se ejecuta dentro de un hilo o Celery worker.
     """
     try:
+
         aiplatform.init(
             project=settings.GCP_PROJECT_ID,
-            location="us-central1"
+            location="us-central1",
+            staging_bucket="gs://nimble-vertex-staging"
         )
 
-        job = aiplatform.CustomPythonPackageTrainingJob(
-            display_name="audio-job-ejemplo",
-            python_package_gcs_uri="gs://programas-python/packages/audio_job-0.0.1.tar.gz",
-            python_module_name="trainer.task",
-            container_uri= "us-docker.pkg.dev/vertex-ai/training/pytorch-gpu.1-13.py310:latest",
-            staging_bucket = "gs://nimble-vertex-staging"  # ← aquí
+        IMAGE_URI = "us-central1-docker.pkg.dev/nimble-depot-456123-n0/vertex-training/audio-training-cu124-corregido:v1"
 
+        nombre_job = f"Generando archivos {usuario}-{siglas}-{fecha}"
+
+        job = aiplatform.CustomContainerTrainingJob(
+            display_name=nombre_job,
+            container_uri=IMAGE_URI,
         )
 
         job_response = job.run(
@@ -397,7 +399,7 @@ def _ejecutar_job(usuario, bucket, siglas, fecha):
             machine_type="g2-standard-4",  # 4 vCPU · 32 GB RAM · L4-8 GB
             accelerator_type="NVIDIA_L4",  # tipo de GPU
             accelerator_count=1,  # 1 GPU L4
-            sync=True  # no bloquea la petición
+            sync=True  # SÍ bloquea la ejecución, espera a que el job termine
         )
 
         logger.info("Job Vertex AI lanzado: %s", job_response.resource_name)
@@ -431,14 +433,14 @@ def iniciar_generador_api(request):
     print(siglas)
     print(bucket)
     print(fecha)
-    """
+
     # Lanza el hilo en segundo plano
     threading.Thread(
         target=_ejecutar_job,
         args=(usuario, bucket, siglas, fecha),
         daemon=True
     ).start()
-    """
+
 
     return Response({"detalle": "Job de Vertex AI iniciado"}, status=202)
 
