@@ -431,6 +431,7 @@ def iniciar_generador_api(request):
 
     # ─── comprueba campañas ───────────────────────────────────
     if not hay_campanas(bucket, usuario):
+        print('no hay campañas configuradas')
         return Response(
             {"detalle": "No hay campañas configuradas."},
             status=200
