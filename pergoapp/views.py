@@ -50,7 +50,7 @@ from .models import Radio
 import requests
 from django.conf import settings
 
-from .utils import consultar_estado_paypal, actualizar_estado_radio
+from .utils import consultar_estado_paypal, actualizar_estado_radio, hay_campanas
 
 _publisher = pubsub_v1.PublisherClient(credentials=settings.GS_CREDENTIALS)
 _TOPIC_PATH = _publisher.topic_path(
@@ -411,33 +411,39 @@ def _ejecutar_job(usuario, bucket, siglas, fecha,software):
 @authentication_classes([TokenAuthentication])
 def iniciar_generador_api(request):
     """
-    Body esperado: {"fecha": "20250526"}
+    Body esperado: {"fecha": "YYYYMMDD"}
     """
-    usuario_django = request.user          # objeto User
-    fecha = request.data.get("fecha")
+    usuario_django = request.user
+    fecha = request.data.get('fecha')
 
     if not fecha:
         return Response({"error": 'Falta el parámetro "fecha".'}, status=400)
 
     radio = Radio.objects.filter(user=usuario_django).first()
     if radio is None:
-        return Response({"error": "No se encontró información de la radio."}, status=404)
+        return Response({"error": "No se encontró información de la radio."},
+                        status=404)
 
-    # Variables para el job
-    usuario = usuario_django.username      # o el valor que tu script espera
-    siglas  = radio.siglas
-    bucket  = settings.GCP_BUCKET_NAME
-    software=radio.software
+    usuario  = usuario_django.username
+    siglas   = radio.siglas
+    bucket   = settings.GCP_BUCKET_NAME
+    software = radio.software
 
+    # ─── comprueba campañas ───────────────────────────────────
+    if not hay_campanas(bucket, usuario):
+        return Response(
+            {"detalle": "No hay campañas configuradas."},
+            status=200
+        )
+
+    # ─── lanza job en segundo plano ───────────────────────────
     print(f'Iniciando generador {usuario}-{siglas}-{fecha}-{software}')
 
-    # Lanza el hilo en segundo plano
     threading.Thread(
         target=_ejecutar_job,
-        args=(usuario, bucket, siglas, fecha,software),
-        daemon=True
+        args=(usuario, bucket, siglas, fecha, software),
+        daemon=True,
     ).start()
-
 
     return Response({"detalle": "Job de Vertex AI iniciado"}, status=202)
 
