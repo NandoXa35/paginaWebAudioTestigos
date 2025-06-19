@@ -416,11 +416,16 @@ def iniciar_generador_api(request):
     usuario_django = request.user
     fecha = request.data.get('fecha')
 
+    print(usuario_django)
+    print(fecha)
+
     if not fecha:
+        print(f'no hay fecha {usuario}-{siglas}-{fecha}');
         return Response({"error": 'Falta el parámetro "fecha".'}, status=400)
 
     radio = Radio.objects.filter(user=usuario_django).first()
     if radio is None:
+        print(f'No hay info de la radio {usuario}-{siglas}-{fecha}')
         return Response({"error": "No se encontró información de la radio."},
                         status=404)
 
@@ -431,7 +436,7 @@ def iniciar_generador_api(request):
 
     # ─── comprueba campañas ───────────────────────────────────
     if not hay_campanas(bucket, usuario):
-        print('no hay campañas configuradas')
+        print(f'no hay campañas configuradas {usuario}-{siglas}-{fecha}')
         return Response(
             {"detalle": "No hay campañas configuradas."},
             status=200

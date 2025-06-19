@@ -2,10 +2,14 @@ import datetime
 from django.utils import timezone
 from datetime import timedelta
 from .models import Radio
+from google.cloud import storage
 
-from django.utils import timezone
 import requests
-from django.utils import timezone
+
+from django.conf import settings
+from google.cloud import storage
+from google.api_core.exceptions import NotFound
+import os
 
 # ─────────────────────────── util ────────────────────────────
 def hay_campanas(bucket_name: str, usuario: str) -> bool:
@@ -13,14 +17,22 @@ def hay_campanas(bucket_name: str, usuario: str) -> bool:
     Devuelve True si en gs://<bucket>/<usuario>/Campañas/ existe
     al menos un objeto distinto de '.placeholder'.
     """
-    client = storage.Client()
-    blobs  = client.list_blobs(bucket_name, prefix=f"{usuario}/Campañas/")
+    try:
+        client = storage.Client(credentials=settings.GS_CREDENTIALS)
+        blobs  = client.list_blobs(bucket_name, prefix=f"{usuario}/Campañas/")
 
-    for blob in blobs:                       # recorre todo el prefijo
-        nombre = os.path.basename(blob.name)
-        if nombre and nombre != '.placeholder':
-            return True                      # hay algo real
-    return False                              # solo placeholder o vacío
+        for blob in blobs:                       # recorre todo el prefijo
+            nombre = os.path.basename(blob.name)
+            print(f"Nombre del objeto: {nombre}")
+            if nombre and nombre != '.placeholder':
+                return True                      # hay algo real
+        return False                              # solo placeholder o vacío
+    except NotFound as e:
+        print(f"No se encontraron objetos en gs://{bucket_name}/{usuario}/Campañas/")
+        return False
+    except Exception as e:
+        print(f"Error al listar objetos en gs://{bucket_name}/{usuario}/Campañas/: {e}")
+        return False
 
 def consultar_estado_paypal(subscription_id, access_token):
     url = f"https://api-m.paypal.com/v1/billing/subscriptions/{subscription_id}"
