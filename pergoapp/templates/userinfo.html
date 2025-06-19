@@ -44,11 +44,11 @@
     </div>
 
 
-    {# -----------  Botón para crear suscripción ----------- #}
+    {# ----------- Botón para crear suscripción ----------- #}
     <form action="{% url 'create_subscription' %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">
-            Suscribirme por $899 MXN/mes
+            Suscríbete por $899 MXN/mes más IVA.
         </button>
     </form>
 
