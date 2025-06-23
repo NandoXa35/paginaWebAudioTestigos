@@ -182,6 +182,7 @@ def signin(request):
 
 @login_required
 def userinfo(request):
+    print('');
     usuario = request.user
     # Si usas ForeignKey:
     radio = Radio.objects.filter(user=usuario).first()
