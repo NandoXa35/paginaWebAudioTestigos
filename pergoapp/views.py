@@ -8,6 +8,7 @@ from django.db import IntegrityError, transaction
 from rest_framework import status
 from google.cloud import aiplatform
 import threading
+import hashlib
 import logging
 from django.conf import settings
 from rest_framework.decorators import api_view, authentication_classes
