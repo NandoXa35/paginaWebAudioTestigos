@@ -370,43 +370,31 @@ def _ejecutar_job(usuario, bucket, siglas, fecha,software):
     """
     IMAGE_URI = ["us-central1-docker.pkg.dev/nimble-depot-456123-n0/vertex-training/audio-training-cu124-corregido:v1",]
 
+    nombre_job = f"Generando archivos {usuario}-{siglas}-{fecha}"
+
+    custom_id  = hashlib.sha1(nombre_job.encode()).hexdigest()[:20]
+
     try:
-
-        # 2️⃣  Vertex AI ► init con creds
-        aiplatform.init(
-            project=settings.GCP_PROJECT_ID,
-            location="us-central1",
-            staging_bucket="gs://nimble-vertex-staging",
-            credentials=settings.GS_CREDENTIALS,  # ← aquí va
-        )
-
-
-        nombre_job = f"Generando archivos {usuario}-{siglas}-{fecha}"
-
         job = aiplatform.CustomContainerTrainingJob(
-            display_name=nombre_job,
-            container_uri=IMAGE_URI[software],
+            display_name   = nombre_job,
+            container_uri  = IMAGE_URI[software],
+            custom_job_id  = custom_id,
         )
 
-        job_response = job.run(
-            args=[
-                "--user", usuario,
-                "--bucket", bucket,
-                "--siglas", siglas,
-                "--fecha", fecha
-            ],
-            replica_count=1,  # 1 nodo
-            machine_type="g2-standard-4",  # 4 vCPU · 32 GB RAM · L4-8 GB
-            accelerator_type="NVIDIA_L4",  # tipo de GPU
-            accelerator_count=1,  # 1 GPU L4
-            sync=True  # SÍ bloquea la ejecución, espera a que el job termine
+        model = job.run(
+            args=[ "--user", usuario,
+                   "--bucket", bucket,
+                   "--siglas", siglas,
+                   "--fecha", fecha ],
+            replica_count      = 1,
+            machine_type       = "g2-standard-4",
+            accelerator_type   = "NVIDIA_L4",
+            accelerator_count  = 1,
+            sync=True,
         )
 
-        logger.info("Job Vertex AI lanzado: %s", job_response.resource_name)
-
-    except Exception as exc:
-        # Traza completa en logs
-        logger.exception("Error al lanzar Vertex AI:")
+    except aiplatform.exceptions.AlreadyExists:
+        logger.warning("Ya hay un CustomJob activo con id %s (%s)", custom_id, nombre_job)
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
